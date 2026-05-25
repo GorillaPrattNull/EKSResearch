@@ -1,0 +1,13 @@
+
+
+
+#What may ultimatly fix load balancer issues. 
+
+Attach role policy to the role created by terraform.
+AmazonEKSLoadBalancingPolicy
+
+aws iam get-role --role-name alb-controller-2026052521224335060000000b
+
+#patch the deployment with the vpc-id
+kubectl patch deployment aws-load-balancer-controller -n kube-system -p '{"spec":{"template":{"spec":{"containers":[{"name":"aws-load-balancer-controller","args":["--cluster-name=eks-demo","--ingress-class=alb","--aws-vpc-id=vpc-00d9a8434fad32728"]}]}}}}'
+kubectl rollout restart deployment/aws-load-balancer-controller -n kube-system
